@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — CosmosVerse</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040209;--hot-pink:#ff2d8a;--lime:#b8ff2e;--orange:#ff6b1a;--violet:#8b2fff;--cyan:#00f5ff;--yellow:#ffe135;--green:#00ff9d;--text:#f0ecff;--muted:#9d94c4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");z-index:9999;pointer-events:none;opacity:.35;}
+.blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.1;pointer-events:none;z-index:0;}
+.b1{width:600px;height:600px;background:radial-gradient(circle,var(--cyan),var(--violet));top:-200px;right:-100px;}
+.b2{width:400px;height:400px;background:radial-gradient(circle,var(--hot-pink),var(--orange));bottom:0;left:-100px;}
+.cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--hot-pink);pointer-events:none;z-index:10000;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:all .12s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(4,2,9,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);}
+.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-decoration:none;background:linear-gradient(90deg,var(--hot-pink),var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 4s linear infinite;}
+@keyframes gs{0%{background-position:0%}100%{background-position:200%}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--hot-pink);}
+.cart-pill{display:flex;align-items:center;gap:.5rem;background:rgba(255,45,138,.1);border:1px solid rgba(255,45,138,.3);color:var(--hot-pink);padding:.5rem 1.2rem;border-radius:30px;text-decoration:none;font-size:.85rem;}
+.cart-bubble{background:var(--lime);color:#040209;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;}
+
+.search-hero{position:relative;z-index:1;padding:110px 2rem 50px;text-align:center;}
+.search-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2rem,6vw,4.5rem);font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--lime),var(--hot-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2rem;}
+.search-wrap{max-width:700px;margin:0 auto;position:relative;}
+.search-input{width:100%;background:rgba(255,255,255,.06);border:2px solid rgba(0,245,255,.3);border-radius:50px;color:var(--text);padding:1.2rem 1.5rem 1.2rem 3.5rem;font-family:'DM Sans',sans-serif;font-size:1.1rem;outline:none;transition:all .3s;}
+.search-input:focus{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(0,245,255,.1),0 0 40px rgba(0,245,255,.2);}
+.search-icon{position:absolute;left:1.2rem;top:50%;transform:translateY(-50%);font-size:1.2rem;}
+.search-clear{position:absolute;right:1.2rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;transition:color .3s;}
+.search-clear:hover{color:var(--hot-pink);}
+
+.quick-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:.7rem;margin-top:1.5rem;}
+.qtag{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:.4rem 1rem;border-radius:20px;cursor:pointer;font-size:.8rem;transition:all .3s;}
+.qtag:hover{border-color:var(--hot-pink);color:var(--hot-pink);background:rgba(255,45,138,.08);}
+
+.results-area{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:2rem 2rem 5rem;}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;}
+.results-count{font-family:'Fira Code',monospace;font-size:.85rem;color:var(--muted);}
+.results-count span{color:var(--lime);}
+.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+.prod-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.prod-card:hover{transform:translateY(-5px);}
+.prod-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;}
+.prod-body{padding:1rem;}
+.prod-cat{font-size:.7rem;font-family:'Fira Code',monospace;letter-spacing:.1em;margin-bottom:.3rem;}
+.prod-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.4rem;}
+.prod-name mark{background:rgba(184,255,46,.25);color:var(--lime);border-radius:3px;padding:0 2px;}
+.prod-price{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.6rem;}
+.add-btn{width:100%;padding:.5rem;background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;border-radius:8px;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;}
+.add-btn:hover{opacity:.85;}
+.no-results{text-align:center;padding:5rem 2rem;color:var(--muted);}
+.no-results .big{font-size:5rem;margin-bottom:1rem;}
+.no-results h2{font-family:'Syne',sans-serif;font-size:1.5rem;color:#fff;margin-bottom:.5rem;}
+
+footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);padding:2rem;text-align:center;}
+footer p{color:var(--muted);font-size:.8rem;}
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:5000;background:rgba(8,3,20,.95);border:1px solid rgba(255,45,138,.4);backdrop-filter:blur(20px);border-radius:16px;padding:1rem 1.5rem;color:var(--text);font-size:.9rem;transform:translateY(100px);opacity:0;transition:all .4s;}
+.toast.show{transform:translateY(0);opacity:1;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:linear-gradient(var(--hot-pink),var(--violet));border-radius:3px;}
+@media(max-width:1000px){.results-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.results-grid{grid-template-columns:1fr;}.nav-links{display:none;}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo">✦ CosmosVerse</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="categories.html">Categories</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="learn.html">Learn</a></li><li><a href="search.html" class="active">Search</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="cart-pill">🛒 Cart <span class="cart-bubble" id="cartCount">0</span></a>
+</nav>
+
+<div class="search-hero">
+  <h1>🔍 Find Your Cosmos</h1>
+  <div class="search-wrap">
+    <span class="search-icon">🔭</span>
+    <input type="text" class="search-input" id="searchInput" placeholder="Search telescopes, books, models..." oninput="doSearch(this.value)">
+    <button class="search-clear" onclick="clearSearch()">✕</button>
+  </div>
+  <div class="quick-tags">
+    <span class="qtag" onclick="quickSearch('telescope')">🔭 Telescope</span>
+    <span class="qtag" onclick="quickSearch('saturn')">🪐 Saturn</span>
+    <span class="qtag" onclick="quickSearch('book')">📚 Book</span>
+    <span class="qtag" onclick="quickSearch('nebula')">🌌 Nebula</span>
+    <span class="qtag" onclick="quickSearch('kids')">🧒 Kids</span>
+    <span class="qtag" onclick="quickSearch('model')">🚀 Model</span>
+    <span class="qtag" onclick="quickSearch('art')">🎨 Art</span>
+    <span class="qtag" onclick="quickSearch('nasa')">🛸 NASA</span>
+  </div>
+</div>
+
+<div class="results-area">
+  <div class="results-header" id="resultsHeader" style="display:none;">
+    <div class="results-count">Found <span id="resNum">0</span> results for "<span id="resTerm" style="color:var(--hot-pink)"></span>"</div>
+  </div>
+  <div class="results-grid" id="resultsGrid"></div>
+</div>
+
+<footer><p>© 2026 CosmosVerse 🚀</p></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+
+const products=[
+  {id:1,name:'StarMaster Pro 8" Reflector',cat:'Telescopes',price:24999,emoji:'🔭',tags:'telescope reflector pro astronomy stargazing',col:'255,45,138'},
+  {id:2,name:'Solar System Model Kit',cat:'Models',price:1499,emoji:'🪐',tags:'model solar system planets kids educational saturn jupiter',col:'0,245,255'},
+  {id:3,name:'Cosmos Encyclopedia Vol.1',cat:'Books',price:899,emoji:'📚',tags:'book study cosmos encyclopedia learn space',col:'184,255,46'},
+  {id:4,name:'Nebula Art Print Set A1',cat:'Artwork',price:2499,emoji:'🎨',tags:'nebula art print poster painting wall decor space',col:'139,47,255'},
+  {id:5,name:'Astrophotography Complete Guide',cat:'Books',price:1299,emoji:'📷',tags:'astrophotography book camera photography deep sky',col:'255,107,26'},
+  {id:6,name:'Star Map Poster 2026',cat:'Prints',price:699,emoji:'🌌',tags:'star map poster print astronomy milky way',col:'255,225,53'},
+  {id:7,name:'Lunar Telescope 60mm',cat:'Telescopes',price:8999,emoji:'🌙',tags:'telescope lunar moon refractor beginner',col:'0,255,157'},
+  {id:8,name:'Mars Rover Scale Model',cat:'Models',price:3299,emoji:'🚀',tags:'mars rover model nasa space model kids',col:'255,77,109'},
+  {id:9,name:'ISS Station Model 1:200',cat:'Models',price:4499,emoji:'🛸',tags:'iss international space station model nasa',col:'255,45,138'},
+  {id:10,name:'Black Hole Art Canvas',cat:'Artwork',price:3999,emoji:'🌑',tags:'black hole art canvas painting abstract space',col:'139,47,255'},
+  {id:11,name:'Deep Sky Observer Guide',cat:'Books',price:1599,emoji:'📖',tags:'deep sky book observer nebula galaxies clusters',col:'0,245,255'},
+  {id:12,name:'Digital Star Finder Pro',cat:'Tools',price:2899,emoji:'🧭',tags:'star finder digital planisphere tool astronomy',col:'184,255,46'},
+  {id:13,name:'Planet Night Lamp Set',cat:'Tools',price:1999,emoji:'💡',tags:'planet lamp night light kids room solar system',col:'255,225,53'},
+  {id:14,name:'Apollo 11 Mission Poster',cat:'Prints',price:599,emoji:'🌕',tags:'apollo nasa moon landing poster print history',col:'255,107,26'},
+  {id:15,name:'Dobsonian Telescope 10"',cat:'Telescopes',price:39999,emoji:'🔭',tags:'dobsonian telescope pro large aperture advanced',col:'0,255,157'},
+  {id:16,name:'Aurora Borealis Canvas Print',cat:'Artwork',price:2799,emoji:'🌈',tags:'aurora borealis painting canvas northern lights art',col:'255,77,109'},
+];
+
+function highlight(text,query){if(!query)return text;const re=new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');return text.replace(re,'<mark>$1</mark>');}
+
+function doSearch(q){
+  q=q.trim().toLowerCase();
+  const header=document.getElementById('resultsHeader');
+  const grid=document.getElementById('resultsGrid');
+  if(!q){header.style.display='none';grid.innerHTML='';return;}
+  const results=products.filter(p=>(p.name+' '+p.cat+' '+p.tags).toLowerCase().includes(q));
+  header.style.display='flex';
+  document.getElementById('resNum').textContent=results.length;
+  document.getElementById('resTerm').textContent=q;
+  if(!results.length){grid.innerHTML=`<div class="no-results" style="grid-column:1/-1"><div class="big">🔭</div><h2>No results found</h2><p>Try searching for "telescope", "nebula", "books", or "model"</p></div>`;return;}
+  grid.innerHTML=results.map(p=>`
+    <div class="prod-card">
+      <div class="prod-img" style="background:linear-gradient(135deg,rgba(${p.col},.18),rgba(${p.col},.04))">${p.emoji}</div>
+      <div class="prod-body">
+        <div class="prod-cat" style="color:rgb(${p.col})">${p.cat}</div>
+        <div class="prod-name">${highlight(p.name,q)}</div>
+        <div class="prod-price" style="color:rgb(${p.col})">₹${p.price.toLocaleString()}</div>
+        <button class="add-btn" onclick="addCart(${p.id},'${p.name}',${p.price},'${p.emoji}')">+ Add to Cart</button>
+      </div>
+    </div>`).join('');
+}
+function quickSearch(q){document.getElementById('searchInput').value=q;doSearch(q);}
+function clearSearch(){document.getElementById('searchInput').value='';doSearch('');}
+function addCart(id,name,price,emoji){let c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');const i=c.findIndex(x=>x.id===id);if(i>-1)c[i].qty++;else c.push({id,name,price,emoji,qty:1});localStorage.setItem('cosmosCart',JSON.stringify(c));updateCount();showToast(`✨ ${name} added!`);}
+function updateCount(){const c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');document.getElementById('cartCount').textContent=c.reduce((a,i)=>a+i.qty,0);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+updateCount();
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Categories — CosmosVerse</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040209;--hot-pink:#ff2d8a;--lime:#b8ff2e;--orange:#ff6b1a;--violet:#8b2fff;--cyan:#00f5ff;--yellow:#ffe135;--green:#00ff9d;--text:#f0ecff;--muted:#9d94c4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");z-index:9999;pointer-events:none;opacity:.35;}
+.blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.1;pointer-events:none;z-index:0;animation:bf 12s ease-in-out infinite;}
+.b1{width:600px;height:600px;background:radial-gradient(circle,var(--violet),var(--hot-pink));top:-200px;right:-100px;}
+.b2{width:500px;height:500px;background:radial-gradient(circle,var(--cyan),var(--lime));bottom:0;left:-100px;animation-delay:-6s;}
+@keyframes bf{0%,100%{transform:scale(1);}50%{transform:scale(1.06) translate(15px,-15px);}}
+.cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--hot-pink);pointer-events:none;z-index:10000;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:all .12s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(4,2,9,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);}
+.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-decoration:none;background:linear-gradient(90deg,var(--hot-pink),var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 4s linear infinite;}
+@keyframes gs{0%{background-position:0%}100%{background-position:200%}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--hot-pink);}
+.cart-pill{display:flex;align-items:center;gap:.5rem;background:rgba(255,45,138,.1);border:1px solid rgba(255,45,138,.3);color:var(--hot-pink);padding:.5rem 1.2rem;border-radius:30px;text-decoration:none;font-size:.85rem;}
+.cart-bubble{background:var(--lime);color:#040209;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;}
+
+.page-hero{position:relative;z-index:1;padding:110px 2rem 50px;text-align:center;}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:800;background:linear-gradient(135deg,var(--orange),var(--yellow),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.page-hero p{color:var(--muted);margin-top:.8rem;font-size:1rem;}
+
+/* CATEGORY SECTIONS */
+.cat-section{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:0 2rem 5rem;}
+.cat-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:2.5rem;padding:2rem;border-radius:20px;position:relative;overflow:hidden;}
+.cat-header::before{content:'';position:absolute;inset:0;opacity:.12;border-radius:20px;}
+.cat-1 .cat-header::before{background:linear-gradient(135deg,var(--hot-pink),var(--violet));}
+.cat-2 .cat-header::before{background:linear-gradient(135deg,var(--cyan),var(--lime));}
+.cat-3 .cat-header::before{background:linear-gradient(135deg,var(--orange),var(--yellow));}
+.cat-4 .cat-header::before{background:linear-gradient(135deg,var(--violet),var(--hot-pink));}
+.cat-5 .cat-header::before{background:linear-gradient(135deg,var(--lime),var(--cyan));}
+.cat-icon-big{font-size:4rem;position:relative;z-index:1;}
+.cat-header-text{position:relative;z-index:1;}
+.cat-header-text h2{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:#fff;}
+.cat-header-text p{color:var(--muted);font-size:.9rem;margin-top:.3rem;}
+.cat-prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;}
+.prod-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.prod-card:hover{transform:translateY(-5px);}
+.prod-img{height:160px;display:flex;align-items:center;justify-content:center;font-size:4rem;}
+.prod-body{padding:1rem;}
+.prod-name{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;color:#fff;margin-bottom:.4rem;}
+.prod-price{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.6rem;}
+.add-btn{width:100%;padding:.5rem;background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;border-radius:8px;color:#fff;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;}
+.add-btn:hover{opacity:.85;transform:scale(1.02);}
+
+footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);padding:2rem;text-align:center;}
+footer p{color:var(--muted);font-size:.8rem;}
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:5000;background:rgba(8,3,20,.95);border:1px solid rgba(255,45,138,.4);backdrop-filter:blur(20px);border-radius:16px;padding:1rem 1.5rem;color:var(--text);font-size:.9rem;transform:translateY(100px);opacity:0;transition:all .4s;}
+.toast.show{transform:translateY(0);opacity:1;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:linear-gradient(var(--hot-pink),var(--violet));border-radius:3px;}
+@media(max-width:1000px){.cat-prod-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:600px){.cat-prod-grid{grid-template-columns:1fr;}.nav-links{display:none;}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo">✦ CosmosVerse</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="categories.html" class="active">Categories</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="learn.html">Learn</a></li><li><a href="search.html">Search</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="cart-pill">🛒 Cart <span class="cart-bubble" id="cartCount">0</span></a>
+</nav>
+
+<div class="page-hero">
+  <h1>🌌 All Categories</h1>
+  <p>Browse our complete collection by cosmic category</p>
+</div>
+
+<div id="categorySections"></div>
+
+<footer><p>© 2026 CosmosVerse 🚀</p></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+
+const categories=[
+  {id:'telescopes',icon:'🔭',name:'Telescopes',desc:'From beginner refractors to professional Dobsonians',col:'var(--hot-pink)',products:[
+    {id:1,emoji:'🔭',name:'StarMaster Pro 8"',price:24999,glow:'255,45,138'},{id:2,emoji:'🌙',name:'Lunar Scope 60mm',price:8999,glow:'0,245,255'},
+    {id:3,emoji:'🔭',name:'GoTo Mount 200mm',price:49999,glow:'139,47,255'},{id:4,emoji:'🌠',name:'Solar Observer',price:12999,glow:'255,107,26'}]},
+  {id:'models',icon:'🚀',name:'Space Models',desc:'Build, display, and learn with scale models',col:'var(--cyan)',products:[
+    {id:5,emoji:'🪐',name:'Solar System Kit',price:1499,glow:'0,245,255'},{id:6,emoji:'🚀',name:'Mars Rover 1:20',price:3299,glow:'184,255,46'},
+    {id:7,emoji:'🛸',name:'ISS Model 1:200',price:4499,glow:'255,45,138'},{id:8,emoji:'🌕',name:'Moon Globe 30cm',price:2199,glow:'255,225,53'}]},
+  {id:'books',icon:'📚',name:'Books & Study',desc:'From kids\' guides to college-level astrophysics',col:'var(--orange)',products:[
+    {id:9,emoji:'📚',name:'Cosmos Encyclopedia',price:899,glow:'255,107,26'},{id:10,emoji:'📖',name:'Deep Sky Guide',price:1599,glow:'184,255,46'},
+    {id:11,emoji:'📷',name:'Astrophotography',price:1299,glow:'0,245,255'},{id:12,emoji:'🧪',name:'Space Science Kids',price:699,glow:'255,45,138'}]},
+  {id:'art',icon:'🎨',name:'Cosmic Art',desc:'Hand-painted and printed space artwork',col:'var(--violet)',products:[
+    {id:13,emoji:'🎨',name:'Nebula Print Set A1',price:2499,glow:'139,47,255'},{id:14,emoji:'🌌',name:'Milky Way Canvas',price:5499,glow:'0,255,157'},
+    {id:15,emoji:'🌑',name:'Black Hole Art',price:3999,glow:'255,45,138'},{id:16,emoji:'🌈',name:'Aurora Canvas',price:2799,glow:'0,245,255'}]},
+  {id:'tools',icon:'🛠️',name:'Astronomy Tools',desc:'Star finders, planispheres, and observation kits',col:'var(--lime)',products:[
+    {id:17,emoji:'🧭',name:'Digital Star Finder',price:2899,glow:'184,255,46'},{id:18,emoji:'💡',name:'Planet Lamp Set',price:1999,glow:'255,225,53'},
+    {id:19,emoji:'📡',name:'Radio Receiver Kit',price:4299,glow:'0,245,255'},{id:20,emoji:'🔬',name:'Space Experiment Kit',price:1799,glow:'255,45,138'}]},
+];
+
+const secEl=document.getElementById('categorySections');
+categories.forEach((cat,ci)=>{
+  const sec=document.createElement('section');sec.className=`cat-section cat-${ci+1}`;sec.id=cat.id;
+  sec.innerHTML=`
+    <div class="cat-header">
+      <div class="cat-icon-big">${cat.icon}</div>
+      <div class="cat-header-text"><h2 style="color:${cat.col}">${cat.name}</h2><p>${cat.desc}</p></div>
+    </div>
+    <div class="cat-prod-grid">
+      ${cat.products.map(p=>`
+        <div class="prod-card">
+          <div class="prod-img" style="background:linear-gradient(135deg,rgba(${p.glow},.2),rgba(${p.glow},.05))">${p.emoji}</div>
+          <div class="prod-body">
+            <div class="prod-name">${p.name}</div>
+            <div class="prod-price" style="color:rgb(${p.glow})">₹${p.price.toLocaleString()}</div>
+            <button class="add-btn" onclick="addCart(${p.id},'${p.name}',${p.price},'${p.emoji}')">+ Add to Cart</button>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  secEl.appendChild(sec);
+});
+
+function addCart(id,name,price,emoji){
+  let c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');
+  const i=c.findIndex(x=>x.id===id);if(i>-1)c[i].qty++;else c.push({id,name,price,emoji,qty:1});
+  localStorage.setItem('cosmosCart',JSON.stringify(c));updateCount();showToast(`✨ ${name} added!`);
+}
+function updateCount(){const c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');document.getElementById('cartCount').textContent=c.reduce((a,i)=>a+i.qty,0);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+updateCount();
+if(location.hash)setTimeout(()=>document.getElementById(location.hash.slice(1))?.scrollIntoView({behavior:'smooth'}),300);
+</script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — CosmosVerse</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040209;--hot-pink:#ff2d8a;--lime:#b8ff2e;--orange:#ff6b1a;--violet:#8b2fff;--cyan:#00f5ff;--yellow:#ffe135;--green:#00ff9d;--rose:#ff4d6d;--text:#f0ecff;--muted:#9d94c4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");z-index:9999;pointer-events:none;opacity:.35;}
+.blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.12;pointer-events:none;z-index:0;animation:bf 10s ease-in-out infinite;}
+.b1{width:700px;height:700px;background:radial-gradient(circle,var(--violet),var(--hot-pink));top:-300px;right:-200px;}
+.b2{width:500px;height:500px;background:radial-gradient(circle,var(--cyan),var(--lime));bottom:-100px;left:-100px;animation-delay:-4s;}
+@keyframes bf{0%,100%{transform:scale(1) translate(0,0);}50%{transform:scale(1.06) translate(20px,-20px);}}
+.cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--hot-pink);pointer-events:none;z-index:10000;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:all .12s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(4,2,9,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);}
+.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-decoration:none;background:linear-gradient(90deg,var(--hot-pink),var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 4s linear infinite;}
+@keyframes gs{0%{background-position:0%}100%{background-position:200%}}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--hot-pink);}
+.cart-pill{display:flex;align-items:center;gap:.5rem;background:rgba(255,45,138,.1);border:1px solid rgba(255,45,138,.3);color:var(--hot-pink);padding:.5rem 1.2rem;border-radius:30px;text-decoration:none;font-size:.85rem;transition:all .3s;}
+.cart-pill:hover{background:rgba(255,45,138,.2);}
+.cart-bubble{background:var(--lime);color:#040209;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;}
+
+.page-hero{position:relative;z-index:1;padding:110px 2rem 50px;text-align:center;}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:800;background:linear-gradient(135deg,var(--hot-pink),var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.page-hero p{color:var(--muted);font-size:1rem;margin-top:.8rem;}
+
+.shop-layout{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:0 2rem 5rem;display:grid;grid-template-columns:260px 1fr;gap:2.5rem;}
+
+/* SIDEBAR */
+.sidebar{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:2rem;height:fit-content;position:sticky;top:90px;}
+.sidebar-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#fff;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem;}
+.filter-section{margin-bottom:2rem;}
+.filter-section h4{font-family:'Fira Code',monospace;font-size:.75rem;letter-spacing:.12em;color:var(--lime);margin-bottom:1rem;}
+.filter-option{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;cursor:pointer;}
+.filter-option input[type=checkbox]{accent-color:var(--hot-pink);width:16px;height:16px;}
+.filter-option label{font-size:.88rem;color:var(--muted);cursor:pointer;transition:color .3s;}
+.filter-option:hover label{color:#fff;}
+.price-range{width:100%;accent-color:var(--hot-pink);}
+.price-vals{display:flex;justify-content:space-between;font-family:'Fira Code',monospace;font-size:.75rem;color:var(--muted);margin-top:.5rem;}
+.age-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+.age-tag{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:.3rem .8rem;border-radius:20px;font-size:.75rem;cursor:pointer;transition:all .3s;}
+.age-tag.on{background:rgba(0,245,255,.15);border-color:var(--cyan);color:var(--cyan);}
+.clear-btn{width:100%;padding:.7rem;background:rgba(255,45,138,.1);border:1px solid rgba(255,45,138,.3);color:var(--hot-pink);border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:.85rem;transition:all .3s;margin-top:.5rem;}
+.clear-btn:hover{background:rgba(255,45,138,.2);}
+
+/* SHOP CONTENT */
+.shop-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;}
+.result-count{font-family:'Fira Code',monospace;font-size:.85rem;color:var(--muted);}
+.result-count span{color:var(--lime);}
+.sort-select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--text);padding:.6rem 1.2rem;border-radius:10px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;}
+.sort-select option{background:#0a0816;}
+
+.prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.prod-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .3s;position:relative;}
+.prod-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(var(--glow-rgb),.2);}
+.prod-img{height:190px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;position:relative;overflow:hidden;}
+.prod-badge{position:absolute;top:.8rem;left:.8rem;background:var(--hot-pink);color:#fff;font-size:.65rem;font-weight:700;font-family:'Fira Code',monospace;padding:.2rem .6rem;border-radius:20px;}
+.prod-wish{position:absolute;top:.8rem;right:.8rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.15);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:.95rem;transition:all .3s;}
+.prod-wish.on{background:rgba(255,45,138,.3);border-color:var(--hot-pink);color:var(--hot-pink);}
+.prod-body{padding:1.2rem;}
+.prod-cat{font-size:.68rem;font-family:'Fira Code',monospace;letter-spacing:.1em;margin-bottom:.3rem;}
+.prod-name{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:.4rem;line-height:1.3;}
+.prod-stars{font-size:.75rem;color:var(--yellow);margin-bottom:.7rem;}
+.prod-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;}
+.prod-price{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;}
+.prod-old{font-size:.75rem;color:var(--muted);text-decoration:line-through;}
+.add-btn{background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;color:#fff;padding:.5rem .9rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600;transition:all .3s;white-space:nowrap;}
+.add-btn:hover{transform:scale(1.05);}
+
+.pagination{display:flex;justify-content:center;gap:.8rem;margin-top:3rem;}
+.pg-btn{width:40px;height:40px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;font-family:'Syne',sans-serif;font-weight:700;transition:all .3s;}
+.pg-btn.active{background:linear-gradient(135deg,var(--hot-pink),var(--violet));border-color:transparent;color:#fff;}
+.pg-btn:hover:not(.active){background:rgba(255,255,255,.08);color:#fff;}
+
+footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);padding:2rem;text-align:center;}
+footer p{color:var(--muted);font-size:.8rem;}
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:5000;background:rgba(8,3,20,.95);border:1px solid rgba(255,45,138,.4);backdrop-filter:blur(20px);border-radius:16px;padding:1rem 1.5rem;color:var(--text);font-size:.9rem;transform:translateY(100px);opacity:0;transition:all .4s;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:linear-gradient(var(--hot-pink),var(--violet));border-radius:3px;}
+@media(max-width:1100px){.prod-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:850px){.shop-layout{grid-template-columns:1fr;}.sidebar{position:relative;top:0;}.prod-grid{grid-template-columns:repeat(2,1fr);}.nav-links{display:none;}}
+@media(max-width:500px){.prod-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo">✦ CosmosVerse</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="shop.html" class="active">Shop</a></li><li><a href="categories.html">Categories</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="learn.html">Learn</a></li><li><a href="search.html">Search</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="cart-pill">🛒 Cart <span class="cart-bubble" id="cartCount">0</span></a>
+</nav>
+
+<div class="page-hero">
+  <h1>🌌 Cosmic Shop</h1>
+  <p>Discover 500+ universe-grade products for every explorer</p>
+</div>
+
+<div class="shop-layout">
+  <aside class="sidebar">
+    <div class="sidebar-title">🎛️ Filters</div>
+    <div class="filter-section">
+      <h4>CATEGORY</h4>
+      <div class="filter-option"><input type="checkbox" id="f1" checked><label for="f1">🔭 Telescopes (42)</label></div>
+      <div class="filter-option"><input type="checkbox" id="f2" checked><label for="f2">🚀 Space Models (78)</label></div>
+      <div class="filter-option"><input type="checkbox" id="f3" checked><label for="f3">📚 Books (95)</label></div>
+      <div class="filter-option"><input type="checkbox" id="f4" checked><label for="f4">🎨 Artwork (64)</label></div>
+      <div class="filter-option"><input type="checkbox" id="f5" checked><label for="f5">🛠️ Tools (53)</label></div>
+      <div class="filter-option"><input type="checkbox" id="f6" checked><label for="f6">🌌 Prints (31)</label></div>
+    </div>
+    <div class="filter-section">
+      <h4>PRICE RANGE</h4>
+      <input type="range" class="price-range" min="0" max="100000" value="100000" id="priceSlider" oninput="updatePrice(this.value)">
+      <div class="price-vals"><span>₹0</span><span id="priceVal">₹1,00,000</span></div>
+    </div>
+    <div class="filter-section">
+      <h4>AGE GROUP</h4>
+      <div class="age-tags">
+        <div class="age-tag on" onclick="this.classList.toggle('on')">Kids 6+</div>
+        <div class="age-tag on" onclick="this.classList.toggle('on')">Teens</div>
+        <div class="age-tag on" onclick="this.classList.toggle('on')">College</div>
+        <div class="age-tag on" onclick="this.classList.toggle('on')">Adult</div>
+        <div class="age-tag on" onclick="this.classList.toggle('on')">Expert</div>
+      </div>
+    </div>
+    <div class="filter-section">
+      <h4>RATING</h4>
+      <div class="filter-option"><input type="checkbox" id="r5" checked><label for="r5">⭐⭐⭐⭐⭐ 5 Stars</label></div>
+      <div class="filter-option"><input type="checkbox" id="r4" checked><label for="r4">⭐⭐⭐⭐ 4+ Stars</label></div>
+      <div class="filter-option"><input type="checkbox" id="r3"><label for="r3">⭐⭐⭐ 3+ Stars</label></div>
+    </div>
+    <button class="clear-btn" onclick="showToast('🔄 Filters cleared!')">Clear Filters</button>
+  </aside>
+
+  <div class="shop-content">
+    <div class="shop-toolbar">
+      <div class="result-count">Showing <span id="resultNum">16</span> results</div>
+      <select class="sort-select" id="sortSel" onchange="sortProducts()">
+        <option>Featured</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Newest First</option><option>Top Rated</option>
+      </select>
+    </div>
+    <div class="prod-grid" id="prodGrid"></div>
+    <div class="pagination">
+      <button class="pg-btn active">1</button><button class="pg-btn">2</button><button class="pg-btn">3</button><button class="pg-btn">→</button>
+    </div>
+  </div>
+</div>
+
+<footer><p>© 2026 CosmosVerse — Explore the Universe 🚀</p></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+
+const products=[
+  {id:1,name:'StarMaster Pro 8" Reflector',cat:'Telescopes',price:24999,old:32000,emoji:'🔭',badge:'BESTSELLER',col:'255,45,138',stars:5},
+  {id:2,name:'Solar System Model Kit',cat:'Models',price:1499,old:1999,emoji:'🪐',badge:'KIDS PICK',col:'0,245,255',stars:5},
+  {id:3,name:'Cosmos Encyclopedia Vol.1',cat:'Books',price:899,old:1200,emoji:'📚',badge:'NEW',col:'184,255,46',stars:4},
+  {id:4,name:'Nebula Art Print Set (A1)',cat:'Artwork',price:2499,old:3500,emoji:'🎨',badge:'HOT',col:'139,47,255',stars:5},
+  {id:5,name:'Astrophotography Guide',cat:'Books',price:1299,old:1699,emoji:'📷',badge:null,col:'255,107,26',stars:4},
+  {id:6,name:'Star Map Poster 2026',cat:'Prints',price:699,old:999,emoji:'🌌',badge:null,col:'255,225,53',stars:5},
+  {id:7,name:'Lunar Telescope 60mm',cat:'Telescopes',price:8999,old:12000,emoji:'🌙',badge:'SALE',col:'0,255,157',stars:4},
+  {id:8,name:'Mars Rover Scale Model',cat:'Models',price:3299,old:4500,emoji:'🚀',badge:null,col:'255,77,109',stars:5},
+  {id:9,name:'ISS Model 1:200 Scale',cat:'Models',price:4499,old:5500,emoji:'🛸',badge:null,col:'255,45,138',stars:4},
+  {id:10,name:'Black Hole Art Canvas',cat:'Artwork',price:3999,old:5200,emoji:'🌑',badge:'NEW',col:'139,47,255',stars:5},
+  {id:11,name:'Deep Sky Observer Guide',cat:'Books',price:1599,old:2000,emoji:'📖',badge:null,col:'0,245,255',stars:4},
+  {id:12,name:'Digital Star Finder',cat:'Tools',price:2899,old:3800,emoji:'🧭',badge:'SALE',col:'184,255,46',stars:5},
+  {id:13,name:'Planet Lamp Set 8pc',cat:'Tools',price:1999,old:2500,emoji:'💡',badge:'KIDS',col:'255,225,53',stars:5},
+  {id:14,name:'Apollo 11 Poster Print',cat:'Prints',price:599,old:800,emoji:'🌕',badge:null,col:'255,107,26',stars:4},
+  {id:15,name:'Dobsonian Telescope 10"',cat:'Telescopes',price:39999,old:52000,emoji:'🔭',badge:'PRO',col:'0,255,157',stars:5},
+  {id:16,name:'Aurora Painting Canvas',cat:'Artwork',price:5499,old:7000,emoji:'🌈',badge:null,col:'255,77,109',stars:5},
+];
+
+function renderProducts(prods){
+  const g=document.getElementById('prodGrid');
+  g.innerHTML=prods.map(p=>`
+    <div class="prod-card" style="--glow-rgb:${p.col};">
+      ${p.badge?`<div class="prod-badge">${p.badge}</div>`:''}
+      <button class="prod-wish" onclick="this.classList.toggle('on')">♡</button>
+      <div class="prod-img" style="background:linear-gradient(135deg,rgba(${p.col},.18),rgba(${p.col},.04));font-size:4.5rem;">
+        ${p.emoji}
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat" style="color:rgba(${p.col},1)">${p.cat}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-stars">${'★'.repeat(p.stars)}${'☆'.repeat(5-p.stars)}</div>
+        <div class="prod-row">
+          <div><span class="prod-price" style="color:rgb(${p.col})">₹${p.price.toLocaleString()}</span> <span class="prod-old">₹${p.old.toLocaleString()}</span></div>
+          <button class="add-btn" onclick="addCart(${p.id},'${p.name}',${p.price},'${p.emoji}')">+ Cart</button>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('resultNum').textContent=prods.length;
+}
+renderProducts(products);
+
+function sortProducts(){
+  const v=document.getElementById('sortSel').value;
+  let p=[...products];
+  if(v.includes('Low'))p.sort((a,b)=>a.price-b.price);
+  else if(v.includes('High'))p.sort((a,b)=>b.price-a.price);
+  else if(v.includes('Rated'))p.sort((a,b)=>b.stars-a.stars);
+  renderProducts(p);
+}
+function updatePrice(v){document.getElementById('priceVal').textContent='₹'+parseInt(v).toLocaleString();}
+
+function addCart(id,name,price,emoji){
+  let c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');
+  const i=c.findIndex(x=>x.id===id);if(i>-1)c[i].qty++;else c.push({id,name,price,emoji,qty:1});
+  localStorage.setItem('cosmosCart',JSON.stringify(c));updateCount();showToast(`✨ ${name} added!`);
+}
+function updateCount(){const c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');document.getElementById('cartCount').textContent=c.reduce((a,i)=>a+i.qty,0);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+updateCount();
+</script>
+</body>
+</html>

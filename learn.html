@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn — CosmosVerse</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040209;--hot-pink:#ff2d8a;--lime:#b8ff2e;--orange:#ff6b1a;--violet:#8b2fff;--cyan:#00f5ff;--yellow:#ffe135;--green:#00ff9d;--text:#f0ecff;--muted:#9d94c4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");z-index:9999;pointer-events:none;opacity:.35;}
+.blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.1;pointer-events:none;z-index:0;animation:bf 12s ease-in-out infinite;}
+.b1{width:600px;height:600px;background:radial-gradient(circle,var(--violet),var(--cyan));top:-200px;left:-100px;}
+.b2{width:500px;height:500px;background:radial-gradient(circle,var(--hot-pink),var(--orange));bottom:0;right:-100px;animation-delay:-7s;}
+@keyframes bf{0%,100%{transform:scale(1);}50%{transform:scale(1.06) translate(15px,-15px);}}
+.cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--hot-pink);pointer-events:none;z-index:10000;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:all .12s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(4,2,9,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);}
+.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-decoration:none;background:linear-gradient(90deg,var(--hot-pink),var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 4s linear infinite;}
+@keyframes gs{0%{background-position:0%}100%{background-position:200%}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--hot-pink);}
+.cart-pill{display:flex;align-items:center;gap:.5rem;background:rgba(255,45,138,.1);border:1px solid rgba(255,45,138,.3);color:var(--hot-pink);padding:.5rem 1.2rem;border-radius:30px;text-decoration:none;font-size:.85rem;}
+.cart-bubble{background:var(--lime);color:#040209;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;}
+
+.page-hero{position:relative;z-index:1;padding:110px 2rem 50px;text-align:center;}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--violet),var(--hot-pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.page-hero p{color:var(--muted);margin-top:.8rem;}
+
+/* TICKER */
+.ticker{position:relative;z-index:1;overflow:hidden;background:linear-gradient(90deg,rgba(0,245,255,.06),rgba(139,47,255,.06),rgba(255,45,138,.06));border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:.9rem 0;margin-bottom:3rem;}
+.ticker-inner{display:flex;gap:2.5rem;animation:tick 25s linear infinite;white-space:nowrap;}
+.ticker-inner span{font-family:'Fira Code',monospace;font-size:.8rem;color:var(--muted);flex-shrink:0;}
+.ticker-inner span b{color:var(--cyan);}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SOLAR SYSTEM */
+.solar-section{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 2rem 4rem;}
+.solar-section h2{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;text-align:center;margin-bottom:.5rem;background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.solar-section p{text-align:center;color:var(--muted);margin-bottom:2rem;}
+.solar-canvas-wrap{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.07);border-radius:20px;overflow:hidden;position:relative;}
+#solarCanvas{display:block;width:100%;}
+.planet-info{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);background:rgba(4,2,9,.9);border:1px solid rgba(0,245,255,.3);backdrop-filter:blur(10px);border-radius:12px;padding:.8rem 1.5rem;text-align:center;min-width:220px;font-size:.85rem;transition:all .3s;opacity:0;}
+.planet-info.show{opacity:1;}
+.planet-info h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--cyan);}
+.planet-info p{color:var(--muted);font-size:.78rem;margin-top:.3rem;}
+
+/* TOPICS */
+.topics-section{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 2rem 4rem;}
+.topics-section h2{font-family:'Syne',sans-serif;font-size:1.8rem;text-align:center;margin-bottom:2rem;background:linear-gradient(135deg,var(--lime),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.level-tabs{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;margin-bottom:2rem;}
+.ltab{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:.5rem 1.2rem;border-radius:20px;cursor:pointer;font-size:.85rem;transition:all .3s;}
+.ltab.active{background:rgba(184,255,46,.12);border-color:var(--lime);color:var(--lime);}
+.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.topic-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.5rem;transition:transform .3s,border-color .3s;}
+.topic-card:hover{transform:translateY(-4px);}
+.topic-icon{font-size:2.5rem;margin-bottom:.8rem;}
+.topic-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#fff;margin-bottom:.4rem;}
+.topic-desc{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
+.topic-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;}
+.ttag{background:rgba(255,255,255,.06);color:var(--muted);font-size:.7rem;padding:.2rem .6rem;border-radius:10px;font-family:'Fira Code',monospace;}
+.learn-btn{width:100%;padding:.6rem;border:1px solid rgba(0,245,255,.3);background:rgba(0,245,255,.07);color:var(--cyan);border-radius:8px;cursor:pointer;font-size:.8rem;font-family:'Syne',sans-serif;font-weight:700;transition:all .3s;}
+.learn-btn:hover{background:rgba(0,245,255,.15);}
+
+/* QUIZ */
+.quiz-section{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:0 2rem 5rem;}
+.quiz-section h2{font-family:'Syne',sans-serif;font-size:1.8rem;text-align:center;margin-bottom:2rem;background:linear-gradient(135deg,var(--hot-pink),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.quiz-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:2.5rem;}
+.q-progress{display:flex;gap:.4rem;margin-bottom:1.5rem;}
+.q-dot{width:28px;height:6px;border-radius:3px;background:rgba(255,255,255,.1);transition:background .4s;}
+.q-dot.done{background:var(--lime);}
+.q-dot.active{background:var(--hot-pink);}
+.q-num{font-family:'Fira Code',monospace;font-size:.75rem;color:var(--muted);margin-bottom:.7rem;}
+.q-text{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:1.5rem;line-height:1.4;}
+.q-opts{display:flex;flex-direction:column;gap:.7rem;}
+.q-opt{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.9rem 1.2rem;cursor:pointer;transition:all .3s;font-size:.9rem;text-align:left;}
+.q-opt:hover:not(.answered){background:rgba(0,245,255,.08);border-color:var(--cyan);}
+.q-opt.correct{background:rgba(0,255,157,.12);border-color:var(--green);color:var(--green);}
+.q-opt.wrong{background:rgba(255,45,138,.1);border-color:var(--hot-pink);color:var(--hot-pink);}
+.q-feedback{margin-top:1rem;padding:.8rem 1rem;border-radius:10px;font-size:.85rem;display:none;}
+.q-feedback.show{display:block;}
+.q-feedback.ok{background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);color:var(--green);}
+.q-feedback.bad{background:rgba(255,45,138,.08);border:1px solid rgba(255,45,138,.2);color:var(--hot-pink);}
+.q-next{width:100%;margin-top:1.2rem;padding:.8rem;background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;border-radius:12px;color:#fff;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;cursor:pointer;display:none;transition:all .3s;}
+.q-next:hover{transform:translateY(-2px);}
+.quiz-result{text-align:center;padding:2rem;}
+.quiz-result .score{font-family:'Syne',sans-serif;font-size:3.5rem;font-weight:800;background:linear-gradient(135deg,var(--lime),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.retry-btn{background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;color:#fff;padding:.8rem 2rem;border-radius:30px;cursor:pointer;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:800;margin-top:1.5rem;transition:all .3s;}
+.retry-btn:hover{transform:scale(1.05);}
+
+footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.06);padding:2rem;text-align:center;}
+footer p{color:var(--muted);font-size:.8rem;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:linear-gradient(var(--hot-pink),var(--violet));border-radius:3px;}
+@media(max-width:800px){.topics-grid{grid-template-columns:repeat(2,1fr);}.nav-links{display:none;}}
+@media(max-width:500px){.topics-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo">✦ CosmosVerse</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="categories.html">Categories</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="learn.html" class="active">Learn</a></li><li><a href="search.html">Search</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="cart-pill">🛒 Cart <span class="cart-bubble" id="cartCount">0</span></a>
+</nav>
+
+<div class="page-hero">
+  <h1>🧠 Learn Space</h1>
+  <p>Explore the universe through interactive lessons and quizzes</p>
+</div>
+
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>☀️ The sun is <b>1.4 million km</b> wide</span><span>|</span>
+    <span>🌌 Milky Way has <b>100–400 billion stars</b></span><span>|</span>
+    <span>⚫ A black hole's <b>escape velocity = speed of light</b></span><span>|</span>
+    <span>🪐 Saturn could <b>float on water</b></span><span>|</span>
+    <span>🌙 Moon gravity is <b>1/6th of Earth's</b></span><span>|</span>
+    <span>🚀 Light from the Sun takes <b>8 min 20 sec</b> to reach Earth</span><span>|</span>
+    <span>☀️ The sun is <b>1.4 million km</b> wide</span><span>|</span>
+    <span>🌌 Milky Way has <b>100–400 billion stars</b></span><span>|</span>
+    <span>⚫ A black hole's <b>escape velocity = speed of light</b></span><span>|</span>
+    <span>🪐 Saturn could <b>float on water</b></span><span>|</span>
+  </div>
+</div>
+
+<!-- SOLAR SYSTEM -->
+<div class="solar-section">
+  <h2>☀️ Interactive Solar System</h2>
+  <p>Click any planet to learn about it</p>
+  <div class="solar-canvas-wrap">
+    <canvas id="solarCanvas" width="900" height="340"></canvas>
+    <div class="planet-info" id="planetInfo"><h3 id="piName">Planet</h3><p id="piDesc">Click a planet to learn more</p></div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="topics-section">
+  <h2>📖 Learning Topics</h2>
+  <div class="level-tabs">
+    <div class="ltab active" onclick="setLevel('all',this)">All Levels</div>
+    <div class="ltab" onclick="setLevel('beginner',this)">🌱 Beginner</div>
+    <div class="ltab" onclick="setLevel('student',this)">📚 Student</div>
+    <div class="ltab" onclick="setLevel('college',this)">🎓 College</div>
+    <div class="ltab" onclick="setLevel('advanced',this)">🔬 Advanced</div>
+  </div>
+  <div class="topics-grid" id="topicsGrid"></div>
+</div>
+
+<!-- QUIZ -->
+<div class="quiz-section">
+  <h2>🧪 Space Quiz</h2>
+  <div class="quiz-box" id="quizBox"></div>
+</div>
+
+<footer><p>© 2026 CosmosVerse 🚀</p></footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+document.getElementById('cartCount').textContent=JSON.parse(localStorage.getItem('cosmosCart')||'[]').reduce((a,i)=>a+i.qty,0);
+
+// SOLAR SYSTEM
+const sc=document.getElementById('solarCanvas'),sctx=sc.getContext('2d');
+sc.width=Math.min(900,sc.parentElement.clientWidth);sc.height=340;
+const planets=[
+  {name:'Mercury',r:7,orb:75,col:'#b0b0b0',speed:.04,desc:'Smallest planet, closest to Sun. A year lasts just 88 days.'},
+  {name:'Venus',r:11,orb:110,col:'#ffd27e',speed:.015,desc:'Hottest planet (460°C). Spins backwards slowly.'},
+  {name:'Earth',r:12,orb:150,col:'#4488ff',speed:.01,desc:'Our home! 71% water. Perfect conditions for life.'},
+  {name:'Mars',r:9,orb:195,col:'#cc4422',speed:.008,desc:'Red Planet. Largest volcano: Olympus Mons (21km high).'},
+  {name:'Jupiter',r:22,orb:255,col:'#d4a866',speed:.004,desc:'Largest planet. Great Red Spot storm for 350+ years.'},
+  {name:'Saturn',r:18,orb:320,col:'#ffe999',speed:.003,desc:'Famous rings made of ice and rock. 82 moons.'},
+  {name:'Uranus',r:14,orb:380,col:'#80d8ff',speed:.002,desc:'Ice giant. Tilted 98° — rolls around the Sun!'},
+  {name:'Neptune',r:13,orb:430,col:'#4466ff',speed:.0015,desc:'Fastest winds in Solar System (2100 km/h). 165-year orbit.'},
+];
+let angles=planets.map((_,i)=>i*(Math.PI*.25));
+const cx=sc.width/2,cy=sc.height/2;
+
+function drawSolar(){
+  sctx.clearRect(0,0,sc.width,sc.height);
+  sctx.fillStyle='#010010';sctx.fillRect(0,0,sc.width,sc.height);
+  // Stars
+  for(let i=0;i<80;i++){sctx.fillStyle=`rgba(255,255,255,${Math.random()*.6+.2})`;sctx.beginPath();sctx.arc(Math.random()*sc.width,Math.random()*sc.height,.8,0,Math.PI*2);sctx.fill();}
+  // Orbits
+  planets.forEach(p=>{sctx.beginPath();sctx.ellipse(cx,cy,p.orb,p.orb*.3,0,0,Math.PI*2);sctx.strokeStyle='rgba(255,255,255,.06)';sctx.lineWidth=1;sctx.stroke();});
+  // Sun
+  const sg=sctx.createRadialGradient(cx,cy,0,cx,cy,30);sg.addColorStop(0,'#fffbe0');sg.addColorStop(.4,'#ffe135');sg.addColorStop(.8,'#ff9900');sg.addColorStop(1,'transparent');sctx.fillStyle=sg;sctx.beginPath();sctx.arc(cx,cy,28,0,Math.PI*2);sctx.fill();
+  // Planets
+  planets.forEach((p,i)=>{
+    angles[i]+=p.speed;
+    const px=cx+Math.cos(angles[i])*p.orb,py=cy+Math.sin(angles[i])*p.orb*.3;
+    const pg=sctx.createRadialGradient(px-p.r*.3,py-p.r*.3,0,px,py,p.r);pg.addColorStop(0,'#fff');pg.addColorStop(.3,p.col);pg.addColorStop(1,p.col+'88');
+    sctx.fillStyle=pg;sctx.beginPath();sctx.arc(px,py,p.r,0,Math.PI*2);sctx.fill();
+    // Saturn rings
+    if(p.name==='Saturn'){sctx.strokeStyle='rgba(255,220,100,.6)';sctx.lineWidth=4;sctx.beginPath();sctx.ellipse(px,py,p.r+18,6,0,0,Math.PI*2);sctx.stroke();}
+    p.px=px;p.py=py;
+  });
+  requestAnimationFrame(drawSolar);
+}
+drawSolar();
+sc.addEventListener('click',e=>{
+  const rect=sc.getBoundingClientRect();const mx=(e.clientX-rect.left)*(sc.width/rect.width),my=(e.clientY-rect.top)*(sc.height/rect.height);
+  const hit=planets.find(p=>p.px&&Math.hypot(mx-p.px,my-p.py)<p.r+10);
+  if(hit){document.getElementById('piName').textContent=hit.name;document.getElementById('piDesc').textContent=hit.desc;document.getElementById('planetInfo').classList.add('show');}
+});
+
+// TOPICS
+const topics=[
+  {icon:'🌟',name:'Stars & Life Cycles',desc:'From nebulae to supernovae — how stars are born, live, and die in spectacular fashion.',tags:['beginner','student'],level:'beginner'},
+  {icon:'🪐',name:'Planets & Solar System',desc:'Explore all 8 planets, dwarf planets, moons, asteroids, and comets in our cosmic neighborhood.',tags:['beginner','kids'],level:'beginner'},
+  {icon:'🌌',name:'Galaxies & Clusters',desc:'Billions of stars in each — learn about spiral, elliptical, and irregular galaxies.',tags:['student','college'],level:'student'},
+  {icon:'⚫',name:'Black Holes',desc:'Singularities, event horizons, Hawking radiation, and what happens when you fall in.',tags:['college','advanced'],level:'college'},
+  {icon:'🔭',name:'Observational Astronomy',desc:'Coordinates, star charts, telescope basics, and how to plan your first deep-sky session.',tags:['beginner','student'],level:'student'},
+  {icon:'🌊',name:'Cosmology & Big Bang',desc:'The origin, expansion, dark matter, dark energy, and ultimate fate of the universe.',tags:['college','advanced'],level:'advanced'},
+];
+let activeLevel='all';
+function setLevel(l,el){activeLevel=l;document.querySelectorAll('.ltab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTopics();}
+function renderTopics(){
+  const filtered=topics.filter(t=>activeLevel==='all'||t.level===activeLevel);
+  const g=document.getElementById('topicsGrid');
+  const cols=['255,45,138','0,245,255','184,255,46','139,47,255','255,107,26','0,255,157'];
+  g.innerHTML=filtered.map((t,i)=>`
+    <div class="topic-card" style="border-color:rgba(${cols[i%6]},.15);">
+      <div class="topic-icon">${t.icon}</div>
+      <div class="topic-name">${t.name}</div>
+      <div class="topic-desc">${t.desc}</div>
+      <div class="topic-tags">${t.tags.map(tag=>`<span class="ttag">${tag}</span>`).join('')}</div>
+      <button class="learn-btn" style="border-color:rgba(${cols[i%6]},.4);color:rgb(${cols[i%6]});background:rgba(${cols[i%6]},.07)">▶ Start Learning</button>
+    </div>`).join('');
+}
+renderTopics();
+
+// QUIZ
+const questions=[
+  {q:'What is the largest planet in our Solar System?',opts:['Saturn','Jupiter','Uranus','Neptune'],ans:1,exp:'Jupiter is the largest planet — so massive, all other planets combined would fit inside it twice!'},
+  {q:'How long does light from the Sun take to reach Earth?',opts:['1 minute','8 minutes 20 seconds','1 hour','24 hours'],ans:1,exp:'Light travels at 299,792 km/s and takes about 8 min 20 sec to cross the 150 million km to Earth.'},
+  {q:'What galaxy is Earth located in?',opts:['Andromeda','Large Magellanic Cloud','Milky Way','Triangulum'],ans:2,exp:'We live in the Milky Way — a barred spiral galaxy about 100,000 light-years across.'},
+  {q:'What is a light-year?',opts:['Time for light to orbit Earth','Distance light travels in one year','Speed of light per hour','One million km'],ans:1,exp:'A light-year is the distance light travels in one year — about 9.46 trillion kilometres!'},
+  {q:'Which planet is known for its Great Red Spot?',opts:['Saturn','Mars','Jupiter','Venus'],ans:2,exp:'Jupiter\'s Great Red Spot is a storm larger than Earth that has lasted for at least 350 years.'},
+  {q:'What is the name of the force that keeps planets in orbit?',opts:['Magnetism','Gravity','Electromagnetism','Nuclear force'],ans:1,exp:'Gravity — described by Newton and refined by Einstein — is responsible for all orbital motion.'},
+  {q:'Which planet has the most moons?',opts:['Jupiter','Saturn','Uranus','Neptune'],ans:1,exp:'Saturn holds the record with 146 confirmed moons as of 2024, overtaking Jupiter.'},
+  {q:'What is a nebula?',opts:['A type of star','A cloud of gas and dust','A small galaxy','A type of black hole'],ans:1,exp:'Nebulae are vast clouds of gas and dust — they are where stars are born!'},
+  {q:'What is the approximate age of the Universe?',opts:['4.5 billion years','13.8 billion years','100 billion years','1 billion years'],ans:1,exp:'The Universe is approximately 13.8 billion years old, measured using cosmic microwave background radiation.'},
+  {q:'What is the escape velocity of Earth?',opts:['7.9 km/s','11.2 km/s','17.4 km/s','5.1 km/s'],ans:1,exp:'Earth\'s escape velocity is 11.2 km/s — rockets must reach this speed to break free of Earth\'s gravity.'},
+];
+let qIdx=0,score=0,answered=false;
+function renderQuiz(){
+  const box=document.getElementById('quizBox');
+  if(qIdx>=questions.length){box.innerHTML=`<div class="quiz-result"><div class="score">${score}/${questions.length}</div><p style="color:var(--muted);margin-top:.8rem;">${score>=8?'🏆 Stellar performance! You\'re a true astronomer!':score>=5?'⭐ Great job! Keep exploring the cosmos!':'🚀 Good start! Keep learning and you\'ll reach the stars!'}</p><button class="retry-btn" onclick="qIdx=0;score=0;renderQuiz()">🔄 Try Again</button></div>`;return;}
+  const q=questions[qIdx];answered=false;
+  const dots=questions.map((_,i)=>`<div class="q-dot ${i<qIdx?'done':i===qIdx?'active':''}"></div>`).join('');
+  box.innerHTML=`
+    <div class="q-progress">${dots}</div>
+    <div class="q-num">Question ${qIdx+1} of ${questions.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-opts">${q.opts.map((o,i)=>`<button class="q-opt" onclick="answer(${i})">${o}</button>`).join('')}</div>
+    <div class="q-feedback" id="qfb"></div>
+    <button class="q-next" id="qNext" onclick="qIdx++;renderQuiz()">Next Question →</button>`;
+}
+function answer(i){
+  if(answered)return;answered=true;
+  const q=questions[qIdx];const opts=document.querySelectorAll('.q-opt');
+  opts[q.ans].classList.add('correct');if(i!==q.ans)opts[i].classList.add('wrong');else score++;
+  const fb=document.getElementById('qfb');fb.textContent=(i===q.ans?'✅ Correct! ':'❌ Incorrect. ')+q.exp;
+  fb.className='q-feedback show '+(i===q.ans?'ok':'bad');
+  document.getElementById('qNext').style.display='block';
+}
+renderQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery — CosmosVerse</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040209;--hot-pink:#ff2d8a;--lime:#b8ff2e;--orange:#ff6b1a;--violet:#8b2fff;--cyan:#00f5ff;--yellow:#ffe135;--green:#00ff9d;--text:#f0ecff;--muted:#9d94c4;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");z-index:9999;pointer-events:none;opacity:.4;}
+.blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.12;pointer-events:none;z-index:0;animation:bf 12s ease-in-out infinite;}
+.b1{width:600px;height:600px;background:radial-gradient(circle,var(--violet),var(--hot-pink));top:-200px;left:-100px;}
+.b2{width:500px;height:500px;background:radial-gradient(circle,var(--cyan),var(--lime));top:30%;right:-100px;animation-delay:-5s;}
+.b3{width:400px;height:400px;background:radial-gradient(circle,var(--orange),var(--yellow));bottom:0;left:30%;animation-delay:-9s;}
+@keyframes bf{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,-20px) scale(1.05);}}
+.cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--hot-pink);pointer-events:none;z-index:10000;transform:translate(-50%,-50%);mix-blend-mode:screen;}
+.cur-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(0,245,255,.5);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:all .12s;}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(4,2,9,.75);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06);}
+.logo{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-decoration:none;background:linear-gradient(90deg,var(--hot-pink),var(--cyan),var(--lime));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200%;animation:gs 4s linear infinite;}
+@keyframes gs{0%{background-position:0%}100%{background-position:200%}}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.9rem;transition:color .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--hot-pink);}
+.cart-pill{display:flex;align-items:center;gap:.5rem;background:rgba(255,45,138,.1);border:1px solid rgba(255,45,138,.3);color:var(--hot-pink);padding:.5rem 1.2rem;border-radius:30px;text-decoration:none;font-size:.85rem;}
+.cart-bubble{background:var(--lime);color:#040209;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;}
+
+.page-hero{position:relative;z-index:1;padding:110px 2rem 50px;text-align:center;}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:800;background:linear-gradient(135deg,var(--hot-pink),var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.page-hero p{color:var(--muted);margin-top:.8rem;}
+
+/* FILTER TABS */
+.filter-tabs{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;margin-bottom:3rem;position:relative;z-index:1;}
+.ftab{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:var(--muted);padding:.6rem 1.5rem;border-radius:30px;cursor:pointer;font-size:.85rem;transition:all .3s;}
+.ftab.active{background:linear-gradient(135deg,rgba(255,45,138,.15),rgba(139,47,255,.15));border-color:var(--hot-pink);color:#fff;}
+.ftab:hover:not(.active){background:rgba(255,255,255,.07);}
+
+/* MASONRY GRID */
+.gallery-grid{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:0 2rem 5rem;columns:4;column-gap:1.2rem;}
+.gallery-item{break-inside:avoid;margin-bottom:1.2rem;border-radius:16px;overflow:hidden;position:relative;cursor:pointer;transition:transform .3s;}
+.gallery-item:hover{transform:scale(1.02);}
+.gallery-item canvas{display:block;width:100%;}
+.item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,2,9,.9) 0%,transparent 50%);opacity:0;transition:opacity .3s;display:flex;flex-direction:column;justify-content:flex-end;padding:1.2rem;}
+.gallery-item:hover .item-overlay{opacity:1;}
+.item-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#fff;margin-bottom:.3rem;}
+.item-price{color:var(--lime);font-family:'Fira Code',monospace;font-size:.8rem;margin-bottom:.6rem;}
+.item-cart-btn{background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;color:#fff;padding:.4rem 1rem;border-radius:8px;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .3s;align-self:flex-start;}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(4,2,9,.96);z-index:4000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.lightbox.show{opacity:1;pointer-events:all;}
+.lb-inner{max-width:900px;width:90%;display:grid;grid-template-columns:1fr 300px;gap:2rem;align-items:center;}
+.lb-canvas-wrap{border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.1);}
+.lb-canvas-wrap canvas{display:block;width:100%;}
+.lb-info{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:2rem;}
+.lb-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:.5rem;}
+.lb-cat{font-family:'Fira Code',monospace;font-size:.75rem;color:var(--hot-pink);letter-spacing:.1em;margin-bottom:1rem;}
+.lb-desc{color:var(--muted);font-size:.9rem;line-height:1.7;margin-bottom:1.5rem;}
+.lb-price{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--lime);margin-bottom:1.2rem;}
+.lb-add{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--hot-pink),var(--violet));border:none;border-radius:12px;color:#fff;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;transition:all .3s;}
+.lb-add:hover{transform:translateY(-2px);box-shadow:0 0 30px rgba(255,45,138,.4);}
+.lb-close{position:fixed;top:2rem;right:2rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.2rem;transition:all .3s;}
+.lb-close:hover{background:rgba(255,45,138,.3);}
+
+.toast{position:fixed;bottom:2rem;right:2rem;z-index:5000;background:rgba(8,3,20,.95);border:1px solid rgba(255,45,138,.4);backdrop-filter:blur(20px);border-radius:16px;padding:1rem 1.5rem;color:var(--text);font-size:.9rem;transform:translateY(100px);opacity:0;transition:all .4s;}
+.toast.show{transform:translateY(0);opacity:1;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:linear-gradient(var(--hot-pink),var(--violet));border-radius:3px;}
+@media(max-width:1100px){.gallery-grid{columns:3;}}
+@media(max-width:800px){.gallery-grid{columns:2;}.lb-inner{grid-template-columns:1fr;}.nav-links{display:none;}}
+@media(max-width:500px){.gallery-grid{columns:1;}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="cur" id="cur"></div><div class="cur-ring" id="curRing"></div>
+<nav>
+  <a href="index.html" class="logo">✦ CosmosVerse</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li><li><a href="shop.html">Shop</a></li><li><a href="categories.html">Categories</a></li><li><a href="gallery.html" class="active">Gallery</a></li><li><a href="learn.html">Learn</a></li><li><a href="search.html">Search</a></li><li><a href="contact.html">Contact</a></li>
+  </ul>
+  <a href="cart.html" class="cart-pill">🛒 Cart <span class="cart-bubble" id="cartCount">0</span></a>
+</nav>
+
+<div class="page-hero">
+  <h1>🎨 Cosmic Gallery</h1>
+  <p>Handcrafted space artwork — painted in light and color</p>
+</div>
+
+<div class="filter-tabs">
+  <div class="ftab active" onclick="filterGallery('all',this)">🌌 All Works</div>
+  <div class="ftab" onclick="filterGallery('nebula',this)">💜 Nebulae</div>
+  <div class="ftab" onclick="filterGallery('planet',this)">🪐 Planets</div>
+  <div class="ftab" onclick="filterGallery('galaxy',this)">🌀 Galaxies</div>
+  <div class="ftab" onclick="filterGallery('spacecraft',this)">🚀 Spacecraft</div>
+  <div class="ftab" onclick="filterGallery('abstract',this)">✨ Abstract</div>
+</div>
+
+<div class="gallery-grid" id="galleryGrid"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="closeLB()">✕</button>
+  <div class="lb-inner">
+    <div class="lb-canvas-wrap"><canvas id="lbCanvas" width="500" height="500"></canvas></div>
+    <div class="lb-info">
+      <div class="lb-title" id="lbTitle">Title</div>
+      <div class="lb-cat" id="lbCat">Category</div>
+      <div class="lb-desc" id="lbDesc">Description</div>
+      <div class="lb-price" id="lbPrice">₹0</div>
+      <button class="lb-add" id="lbAddBtn">+ Add to Cart</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('curRing');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px';});
+
+const artworks=[
+  {id:101,title:'Pillars of Creation',cat:'nebula',price:2999,desc:'Inspired by the iconic Hubble image — towering gas pillars in the Eagle Nebula ablaze with electric color.',painter:(c,ctx)=>{nebulaPainting(c,ctx,['#8b2fff','#ff2d8a','#ff6b1a'],true);}},
+  {id:102,title:'Andromeda Rising',cat:'galaxy',price:3499,desc:'Our nearest galactic neighbor painted in luminous blues and violets against the deep void of space.',painter:(c,ctx)=>{galaxyPainting(c,ctx,['#00f5ff','#8b2fff','#ff2d8a']);}},
+  {id:103,title:'Saturn at Opposition',cat:'planet',price:2499,desc:'Saturn\'s iconic rings glowing gold and honey — a celestial crown that never fails to awe.',painter:(c,ctx)=>{saturnPainting(c,ctx);}},
+  {id:104,title:'Supernova Remnant',cat:'nebula',price:4999,desc:'A dying star\'s final act — an expanding shell of plasma and light in crimson and gold.',painter:(c,ctx)=>{nebulaPainting(c,ctx,['#ff6b1a','#ffe135','#ff2d8a'],false);}},
+  {id:105,title:'Mars at Dusk',cat:'planet',price:1999,desc:'The red planet bathed in rusty amber at its dramatic polar sunset.',painter:(c,ctx)=>{marsPainting(c,ctx);}},
+  {id:106,title:'Milky Way Arch',cat:'galaxy',price:5499,desc:'The full sweep of our galaxy painted with every shade of the cosmic spectrum.',painter:(c,ctx)=>{milkyWayPainting(c,ctx);}},
+  {id:107,title:'Apollo Launch',cat:'spacecraft',price:1999,desc:'Saturn V rocket tearing through the atmosphere in a pillar of fire and thunder.',painter:(c,ctx)=>{launchPainting(c,ctx);}},
+  {id:108,title:'ISS Silhouette',cat:'spacecraft',price:2299,desc:'The International Space Station drifting in golden twilight against the curved Earth.',painter:(c,ctx)=>{issPainting(c,ctx);}},
+  {id:109,title:'Helix Nebula',cat:'nebula',price:3999,desc:'The eye of God — concentric rings of stellar wind glowing in cyan and emerald.',painter:(c,ctx)=>{helixPainting(c,ctx);}},
+  {id:110,title:'Black Hole Serenade',cat:'abstract',price:6999,desc:'A gravitational masterpiece — accretion disk bending light in a hypnotic spiral.',painter:(c,ctx)=>{blackholePainting(c,ctx);}},
+  {id:111,title:'Aurora Borealis',cat:'abstract',price:2799,desc:'Earth\'s own cosmic light show — curtains of neon dancing above frozen tundra.',painter:(c,ctx)=>{auroraPainting(c,ctx);}},
+  {id:112,title:'Neptune\'s Storm',cat:'planet',price:3299,desc:'The dark blue giant wracked by the fastest winds in the solar system.',painter:(c,ctx)=>{neptunePainting(c,ctx);}},
+];
+
+// === PAINTERS ===
+function nebulaPainting(c,ctx,cols,pillars){
+  ctx.fillStyle='#020008';ctx.fillRect(0,0,c.width,c.height);
+  for(let i=0;i<8;i++){const g=ctx.createRadialGradient(Math.random()*c.width,Math.random()*c.height,0,c.width/2,c.height/2,c.width*.7);g.addColorStop(0,cols[i%cols.length]+'66');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);}
+  if(pillars){for(let i=0;i<3;i++){ctx.fillStyle=cols[i]+'44';ctx.beginPath();ctx.moveTo(80+i*80,c.height);ctx.lineTo(60+i*80,0);ctx.lineTo(120+i*80,0);ctx.lineTo(140+i*80,c.height);ctx.fill();}}
+  paintStars(c,ctx,60);
+}
+function galaxyPainting(c,ctx,cols){
+  ctx.fillStyle='#010007';ctx.fillRect(0,0,c.width,c.height);
+  const cx=c.width/2,cy=c.height/2;
+  for(let r=c.width*.4;r>10;r-=8){const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r);g.addColorStop(0,cols[0]+'22');g.addColorStop(.5,cols[1]+'18');g.addColorStop(1,'transparent');ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(cx,cy,r,r*.4,Math.PI*.15,0,Math.PI*2);ctx.fill();}
+  paintStars(c,ctx,80);
+}
+function saturnPainting(c,ctx){
+  ctx.fillStyle='#010510';ctx.fillRect(0,0,c.width,c.height);
+  const g=ctx.createRadialGradient(c.width/2,c.height/2,0,c.width/2,c.height/2,c.width*.7);g.addColorStop(0,'#0a0530');g.addColorStop(1,'#000010');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  const cx=c.width/2,cy=c.height/2;
+  const rg=ctx.createRadialGradient(cx,cy-10,0,cx,cy-10,70);rg.addColorStop(0,'#ffe135');rg.addColorStop(.5,'#ff9a00');rg.addColorStop(1,'#c47a00');ctx.fillStyle=rg;ctx.beginPath();ctx.ellipse(cx,cy,70,65,0,0,Math.PI*2);ctx.fill();
+  const rings=[{r:110,w:18,c:'rgba(255,190,50,.6)'},{r:140,w:12,c:'rgba(200,140,30,.4)'},{r:163,w:8,c:'rgba(255,210,80,.3)'}];
+  rings.forEach(ring=>{ctx.strokeStyle=ring.c;ctx.lineWidth=ring.w;ctx.beginPath();ctx.ellipse(cx,cy,ring.r,ring.r*.28,0,0,Math.PI*2);ctx.stroke();});
+  paintStars(c,ctx,50);
+}
+function marsPainting(c,ctx){
+  const g=ctx.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#1a0800');g.addColorStop(.5,'#3d1500');g.addColorStop(1,'#0a0300');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  const pg=ctx.createRadialGradient(c.width*.6,c.height*.4,0,c.width*.6,c.height*.4,c.width*.38);pg.addColorStop(0,'#ff7744');pg.addColorStop(.4,'#cc3300');pg.addColorStop(.8,'#882200');pg.addColorStop(1,'transparent');ctx.fillStyle=pg;ctx.beginPath();ctx.arc(c.width*.6,c.height*.4,c.width*.33,0,Math.PI*2);ctx.fill();
+  const sg=ctx.createLinearGradient(0,c.height*.65,0,c.height);sg.addColorStop(0,'rgba(255,100,20,.6)');sg.addColorStop(1,'rgba(200,60,10,.0)');ctx.fillStyle=sg;ctx.fillRect(0,c.height*.65,c.width,c.height*.35);
+  paintStars(c,ctx,40);
+}
+function milkyWayPainting(c,ctx){
+  ctx.fillStyle='#000008';ctx.fillRect(0,0,c.width,c.height);
+  for(let i=0;i<1200;i++){ctx.fillStyle=`hsla(${200+Math.random()*160},60%,${60+Math.random()*40}%,${.3+Math.random()*.7})`;const x=Math.random()*c.width,y=c.height*.3+Math.sin(x/c.width*Math.PI*1.5)*(c.height*.25)+(Math.random()-.5)*80;ctx.beginPath();ctx.arc(x,y,Math.random()*1.5+.2,0,Math.PI*2);ctx.fill();}
+  paintStars(c,ctx,50);
+}
+function launchPainting(c,ctx){
+  const g=ctx.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#000510');g.addColorStop(.6,'#0a1540');g.addColorStop(1,'#1a3060');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  const fx=c.width/2,fb=c.height*.2;
+  for(let i=0;i<3;i++){const fg=ctx.createRadialGradient(fx+(Math.random()-.5)*20,fb+i*30,0,fx,fb+60,80+i*30);fg.addColorStop(0,'#fff');fg.addColorStop(.2,['#ff6b1a','#ffe135','#ff2d8a'][i]);fg.addColorStop(1,'transparent');ctx.fillStyle=fg;ctx.fillRect(0,0,c.width,c.height);}
+  ctx.fillStyle='#ccc';ctx.fillRect(fx-10,c.height*.05,20,60);
+  paintStars(c,ctx,70);
+}
+function issPainting(c,ctx){
+  const g=ctx.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#000018');g.addColorStop(.5,'#001830');g.addColorStop(1,'#003050');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  const eg=ctx.createLinearGradient(0,c.height*.6,0,c.height);eg.addColorStop(0,'#004488');eg.addColorStop(.5,'#0077aa');eg.addColorStop(1,'#00aacc');ctx.fillStyle=eg;ctx.fillRect(0,c.height*.6,c.width,c.height*.4);
+  const cx=c.width*.5,cy=c.height*.38;
+  ctx.fillStyle='#ddd';ctx.fillRect(cx-30,cy-6,60,12);
+  ctx.fillStyle='rgba(100,180,255,.6)';ctx.fillRect(cx-80,cy-4,40,8);ctx.fillRect(cx+40,cy-4,40,8);
+  paintStars(c,ctx,60);
+}
+function helixPainting(c,ctx){
+  ctx.fillStyle='#000810';ctx.fillRect(0,0,c.width,c.height);
+  const cx=c.width/2,cy=c.height/2;
+  const cols=['#00f5ff','#00ff9d','#b8ff2e','#ffe135'];
+  for(let r=c.width*.42;r>30;r-=22){const gc=ctx.createRadialGradient(cx,cy,r-15,cx,cy,r);gc.addColorStop(0,'transparent');gc.addColorStop(.5,cols[Math.floor(r/22)%cols.length]+'33');gc.addColorStop(1,'transparent');ctx.fillStyle=gc;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();}
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(cx,cy,18,0,Math.PI*2);ctx.fill();
+  paintStars(c,ctx,50);
+}
+function blackholePainting(c,ctx){
+  ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height);
+  const cx=c.width/2,cy=c.height/2;
+  for(let r=c.width*.44;r>40;r-=4){const t=1-r/(c.width*.44);const cols=[`rgba(255,107,26,${t*.4})`,`rgba(255,225,53,${t*.3})`,`rgba(255,45,138,${t*.25})`];ctx.strokeStyle=cols[Math.floor(t*3)%3];ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(cx,cy,r,r*.18,Math.PI*.1,0,Math.PI*2);ctx.stroke();}
+  const bg=ctx.createRadialGradient(cx,cy,0,cx,cy,55);bg.addColorStop(0,'#000');bg.addColorStop(1,'#000');ctx.fillStyle=bg;ctx.beginPath();ctx.arc(cx,cy,55,0,Math.PI*2);ctx.fill();
+  paintStars(c,ctx,80);
+}
+function auroraPainting(c,ctx){
+  const g=ctx.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#000318');g.addColorStop(.5,'#001a30');g.addColorStop(1,'#002a10');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  const cols=['#00ff9d','#00f5ff','#b8ff2e','#8b2fff','#ff2d8a'];
+  for(let i=0;i<5;i++){const ag=ctx.createLinearGradient(0,0,0,c.height*.7);ag.addColorStop(0,'transparent');ag.addColorStop(.3,cols[i]+'55');ag.addColorStop(.7,cols[i]+'22');ag.addColorStop(1,'transparent');ctx.fillStyle=ag;ctx.beginPath();const x=20+i*(c.width/5);ctx.moveTo(x,0);for(let y=0;y<c.height*.7;y+=5)ctx.lineTo(x+Math.sin(y*.05+i)*30,y);ctx.lineTo(x+60,c.height*.7);ctx.lineTo(x,c.height*.7);ctx.closePath();ctx.fill();}
+  paintStars(c,ctx,60);
+}
+function neptunePainting(c,ctx){
+  const g=ctx.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#000818');g.addColorStop(1,'#000428');ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+  const pg=ctx.createRadialGradient(c.width*.5,c.height*.42,0,c.width*.5,c.height*.42,c.width*.35);pg.addColorStop(0,'#4488ff');pg.addColorStop(.4,'#2255cc');pg.addColorStop(.8,'#001166');pg.addColorStop(1,'transparent');ctx.fillStyle=pg;ctx.beginPath();ctx.arc(c.width*.5,c.height*.42,c.width*.3,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(100,150,255,.3)';ctx.beginPath();ctx.ellipse(c.width*.55,c.height*.38,50,15,-.3,0,Math.PI*2);ctx.fill();
+  paintStars(c,ctx,60);
+}
+function paintStars(c,ctx,n){for(let i=0;i<n;i++){ctx.fillStyle=`rgba(255,255,255,${.3+Math.random()*.7})`;ctx.beginPath();ctx.arc(Math.random()*c.width,Math.random()*c.height,Math.random()*1.5+.2,0,Math.PI*2);ctx.fill();}}
+
+// Heights for masonry
+const heights={101:280,102:240,103:280,104:260,105:220,106:260,107:280,108:240,109:280,110:260,111:260,112:260};
+let currentFilter='all';
+
+function renderGallery(filter){
+  const grid=document.getElementById('galleryGrid');
+  const filtered=artworks.filter(a=>filter==='all'||a.cat===filter);
+  grid.innerHTML='';
+  filtered.forEach(art=>{
+    const div=document.createElement('div');div.className='gallery-item';div.dataset.cat=art.cat;
+    const h=heights[art.id]||250;
+    const c=document.createElement('canvas');c.width=320;c.height=h;
+    div.appendChild(c);
+    div.innerHTML+=`<div class="item-overlay"><div class="item-title">${art.title}</div><div class="item-price">₹${art.price.toLocaleString()}</div><button class="item-cart-btn" onclick="event.stopPropagation();addCart(${art.id},'${art.title}',${art.price},'🎨')">+ Cart</button></div>`;
+    div.querySelector('canvas').getContext('2d');
+    div.onclick=()=>openLB(art);
+    grid.appendChild(div);
+    art.painter(c,c.getContext('2d'));
+  });
+}
+
+function filterGallery(f,el){
+  currentFilter=f;
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');renderGallery(f);
+}
+
+let activeLBArt=null;
+function openLB(art){
+  activeLBArt=art;
+  document.getElementById('lbTitle').textContent=art.title;
+  document.getElementById('lbCat').textContent=art.cat.toUpperCase();
+  document.getElementById('lbDesc').textContent=art.desc;
+  document.getElementById('lbPrice').textContent='₹'+art.price.toLocaleString();
+  document.getElementById('lbAddBtn').onclick=()=>{addCart(art.id,art.title,art.price,'🎨');};
+  const lbc=document.getElementById('lbCanvas');lbc.width=500;lbc.height=500;
+  art.painter(lbc,lbc.getContext('2d'));
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLB(){document.getElementById('lightbox').classList.remove('show');}
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===e.currentTarget)closeLB();});
+
+function addCart(id,name,price,emoji){
+  let c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');
+  const i=c.findIndex(x=>x.id===id);if(i>-1)c[i].qty++;else c.push({id,name,price,emoji,qty:1});
+  localStorage.setItem('cosmosCart',JSON.stringify(c));updateCount();showToast(`🎨 "${name}" added to cart!`);
+}
+function updateCount(){const c=JSON.parse(localStorage.getItem('cosmosCart')||'[]');document.getElementById('cartCount').textContent=c.reduce((a,i)=>a+i.qty,0);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+updateCount();renderGallery('all');
+</script>
+</body>
+</html>
